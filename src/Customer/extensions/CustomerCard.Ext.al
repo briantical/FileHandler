@@ -8,6 +8,7 @@ pageextension 50100 CustomerCardExt extends "Customer Card"
             trigger OnAfterValidate()
             var
                 TranslationManagement: Codeunit TranslationManagement;
+                Formatter: Codeunit "Format Document";
             begin
                 if Rec.Name.EndsWith('.com') then begin
                     if Confirm('Do you want to retrieve company details?', false) then
