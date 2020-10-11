@@ -19,7 +19,8 @@ codeunit 50100 TranslationManagement
         Client.Post('https://api.fullcontact.com/v3/company.enrich',
               Content, ResponseMessage);
         if not ResponseMessage.IsSuccessStatusCode() then
-            Error('Error connecting to the Web Service.');
+            Message(ResponseMessage.ReasonPhrase);
+        Error('Error connecting to the Web Service.');
         ResponseMessage.Content().ReadAs(Result);
         if not JContent.ReadFrom(Result) then
             Error('Invalid response from Web Service');

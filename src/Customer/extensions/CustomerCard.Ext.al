@@ -9,7 +9,7 @@ pageextension 50100 CustomerCardExt extends "Customer Card"
             var
                 TranslationManagement: Codeunit TranslationManagement;
             begin
-                if Name.EndsWith('.com') then begin
+                if Rec.Name.EndsWith('.com') then begin
                     if Confirm('Do you want to retrieve company details?', false) then
                         TranslationManagement.LookupAddressInfo(Rec.Name, Rec);
                 end;
