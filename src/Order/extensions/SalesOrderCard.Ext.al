@@ -15,7 +15,7 @@ pageextension 50102 SalesOrderExt extends "Sales Order"
                 PromotedIsBig = true;
                 trigger OnAction()
                 begin
-                    Formatter.XMLDocumentCreation();
+                    Formatter.XMLDocumentCreation(Rec);
                 end;
             }
         }

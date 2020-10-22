@@ -24,32 +24,105 @@ codeunit 50101 Formatter
 
     end;
 
-    procedure XMLDocumentCreation()
+    procedure XMLDocumentCreation(var SalesHeader: Record "Sales Header")
     var
         xmlDoc: XmlDocument;
         xmlDec: XmlDeclaration;
-        xmlElem: XmlElement;
-        xmlElem2: XmlElement;
+        root: XmlElement;
+        Comment: XmlComment;
+        // Customer details
+        Customer: XmlElement;
+        Name: XmlElement;
+        Address: XmlElement;
+        City: XmlElement;
+        Contact: XmlElement;
+        // Item details
+        itemNo: XmlElement;
+        Amount: XmlElement;
+        Description: XmlElement;
+        Quantity: XmlElement;
+        SalesItems: XmlElement;
+        SalesItem: XmlElement;
+
         TempBlob: Codeunit "Temp Blob";
         outStr: OutStream;
         inStr: InStream;
         TempFile: File;
         fileName: Text;
+        SalesLine: Record "Sales Line";
+
     begin
+        SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+        SalesLine.SetRange("Document No.", SalesHeader."No.");
+        SalesLine.SetRange(Type, SalesLine.Type::Item);
+
         xmlDoc := xmlDocument.Create();
         xmlDec := xmlDeclaration.Create('1.0', 'UTF-8', '');
         xmlDoc.SetDeclaration(xmlDec);
 
-        xmlElem := xmlElement.Create('root');
-        xmlElem.SetAttribute('release', '2.1');
+        root := xmlElement.Create('root');
+        root.SetAttribute('release', '2.1');
+        Comment := XmlComment.Create('This is an auto generated file. Dont edit');
+        root.Add(Comment);
 
-        xmlElem2 := XmlElement.Create('FirstName');
-        xmlElem2.Add(xmlText.Create('Max'));
+        // Add the customer name
+        Name := XmlElement.Create('CustomerName');
+        Name.Add(xmlText.Create(SalesHeader."Bill-to Name"));
 
-        xmlElem.Add(xmlElem2);
-        xmlDoc.Add(xmlElem);
+        // Add the customer address
+        Address := XmlElement.Create('Address');
+        Address.Add(xmlText.Create(SalesHeader."Bill-to Address"));
 
-        fileName := 'handler.xml';
+        // Add customer city
+        City := XmlElement.Create('City');
+        City.Add(xmlText.Create(SalesHeader."Bill-to City"));
+
+        // Add customer contact
+        Contact := XmlElement.Create('Contact');
+        Contact.Add(xmlText.Create(SalesHeader."Bill-to Contact"));
+
+        // Create the customer items
+        Customer := XmlElement.Create('Customer');
+        SalesItems := XmlElement.Create('Items');
+
+        // Add all the customer details
+        Customer.Add(Name);
+        Customer.Add(Address);
+        Customer.Add(City);
+        Customer.Add(Contact);
+
+        if SalesLine.FindSet() then
+            repeat
+                // Create the item
+                SalesItem := XmlElement.Create('Item');
+
+                // Add Item code
+                itemNo := XmlElement.Create('Code');
+                itemNo.Add(XmlText.Create(SalesLine."No."));
+                // Add the item amount
+                Amount := XmlElement.Create('Amount');
+                Amount.Add(XmlText.Create(System.Format(SalesLine.Amount)));
+                // Add the item description
+                Description := XmlElement.Create('Description');
+                Description.Add(XmlText.Create(SalesLine.Description));
+                // Add the item Quantity
+                Quantity := XmlElement.Create('Quantity');
+                Quantity.Add(XmlText.Create(System.Format(SalesLine.Quantity)));
+
+                SalesItem.Add(itemNo);
+                SalesItem.Add(Amount);
+                SalesItem.Add(Description);
+                SalesItem.Add(Quantity);
+
+                SalesItems.Add(SalesItem);
+
+            until SalesLine.Next() = 0;
+
+        root.Add(Customer);
+        root.Add(SalesItems);
+        xmlDoc.Add(root);
+
+        fileName := 'sales.xml';
 
         // Create an outStream from the Blob, notice the encoding.
         TempBlob.CreateOutStream(outStr, TextEncoding::UTF8);
@@ -104,5 +177,4 @@ codeunit 50101 Formatter
         until SalesLines.Next() = 0;
         JsonOrderArray.Add(JsonArrayLines);
     end;
-
 }
