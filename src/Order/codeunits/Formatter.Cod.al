@@ -1,6 +1,6 @@
 codeunit 50101 Formatter
 {
-    local procedure ImportXML()
+    procedure ImportXMLs()
     var
         TempBlob: Codeunit "Temp Blob";
         TargetXmlDoc: XmlDocument;
@@ -20,7 +20,7 @@ codeunit 50101 Formatter
         Xmldocument.ReadFrom(Instr, TargetXmlDoc);
     end;
 
-    local procedure XMLDocumentCreation()
+    procedure XMLDocumentCreation()
     var
         xmldoc: XmlDocument;
         xmlDec: XmlDeclaration;
