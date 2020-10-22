@@ -14,13 +14,12 @@ codeunit 50100 TranslationManagement
         JPhones: JsonArray;
         JPhone: JsonObject;
     begin
-        Content.WriteFrom('{domain":"' + Name + '"}');
+        Content.WriteFrom('{"domain":"' + Name + '"}');
         Client.DefaultRequestHeaders().Add('Authorization', 'Bearer yeLHBn8kpkUZ5IE5YyZBRJcqHE3lMKpo');
         Client.Post('https://api.fullcontact.com/v3/company.enrich',
               Content, ResponseMessage);
         if not ResponseMessage.IsSuccessStatusCode() then
-            Message(ResponseMessage.ReasonPhrase);
-        Error('Error connecting to the Web Service.');
+            Error(ResponseMessage.ReasonPhrase);
         ResponseMessage.Content().ReadAs(Result);
         if not JContent.ReadFrom(Result) then
             Error('Invalid response from Web Service');
