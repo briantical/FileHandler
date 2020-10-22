@@ -5,6 +5,6 @@ pageextension 50101 OrderExtension extends "Sales Order List"
         Formatter: Codeunit Formatter;
     begin
         // Formatter.ImportXMLs();
-        Formatter.XMLDocumentCreation();
+        // Formatter.XMLDocumentCreation();
     end;
 }
