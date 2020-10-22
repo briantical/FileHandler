@@ -6,6 +6,7 @@ codeunit 50101 Formatter
         TargetXmlDoc: XmlDocument;
         XmlDec: XmlDeclaration;
         Instr: InStream;
+        OutStr: OutStream;
         filename: Text;
     begin
         // Create the Xml Document
@@ -14,27 +15,53 @@ codeunit 50101 Formatter
         TargetXmlDoc.SetDeclaration(xmlDec);
         // Create an Instream object & upload the XML file into it
         TempBlob.CreateInStream(Instr);
-        filename := 'data.xml';
+        // filename := 'data.xml';
         UploadIntoStream('Import XML', '', '', filename, Instr);
         // Read stream into new xml document
         Xmldocument.ReadFrom(Instr, TargetXmlDoc);
+        DownloadFromStream(InStr, '', '', '', filename);
+
+
     end;
 
     procedure XMLDocumentCreation()
     var
-        xmldoc: XmlDocument;
+        xmlDoc: XmlDocument;
         xmlDec: XmlDeclaration;
-        node1: XmlElement;
-        node2: XmlElement;
+        xmlElem: XmlElement;
+        xmlElem2: XmlElement;
+        TempBlob: Codeunit "Temp Blob";
+        outStr: OutStream;
+        inStr: InStream;
+        TempFile: File;
+        fileName: Text;
     begin
-        xmldoc := XmlDocument.Create();
+        xmlDoc := xmlDocument.Create();
         xmlDec := xmlDeclaration.Create('1.0', 'UTF-8', '');
         xmlDoc.SetDeclaration(xmlDec);
-        node1 := XmlElement.Create('node1');
-        xmldoc.Add(node1);
-        node2 := XmlElement.Create('node2');
-        node2.SetAttribute('ID', '3');
-        node1.Add(node2);
+
+        xmlElem := xmlElement.Create('root');
+        xmlElem.SetAttribute('release', '2.1');
+
+        xmlElem2 := XmlElement.Create('FirstName');
+        xmlElem2.Add(xmlText.Create('Max'));
+
+        xmlElem.Add(xmlElem2);
+        xmlDoc.Add(xmlElem);
+
+        fileName := 'handler.xml';
+
+        // Create an outStream from the Blob, notice the encoding.
+        TempBlob.CreateOutStream(outStr, TextEncoding::UTF8);
+
+        // Write the contents of the doc to the stream
+        xmlDoc.WriteTo(outStr);
+
+        // From the same Blob, that now contains the XML document, create an inStr
+        TempBlob.CreateInStream(inStr, TextEncoding::UTF8);
+
+        // Save the data of the InStream as a file.
+        DownloadFromStream(inStr, 'Export', '', '', fileName);
     end;
 
     procedure CreateJsonOrder(OrderNo: Code[20])
