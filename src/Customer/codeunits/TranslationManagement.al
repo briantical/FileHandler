@@ -29,15 +29,13 @@ codeunit 50100 TranslationManagement
         JPhones := GetTokenAsArray(JDetails, 'phones', '');
         JPhone := GetArrayElementAsObject(JPhones, 0, '');
         Customer.Name := GetTokenAsText(JContent, 'name', '');
-        Customer.Address := GetTokenAsText(JLocation, 'addressLine1',
-       '');
+        Customer.Address := GetTokenAsText(JLocation, 'addressLine1', '');
         Customer.City := GetTokenAsText(JLocation, 'city', '');
-        Customer."Post Code" := GetTokenAsText(JLocation,
-       'postalCode', '');
-        Customer."Country/Region Code" := GetTokenAsText(JLocation,
-       'countryCode', '');
+        Customer."Post Code" := GetTokenAsText(JLocation, 'postalCode', '');
+        Customer."Country/Region Code" := GetTokenAsText(JLocation, 'countryCode', '');
         Customer.County := GetTokenAsText(JLocation, 'country', '');
         Customer."Phone No." := GetTokenAsText(JPhone, 'value', '');
+        Customer.Modify(true);
     end;
 
     procedure GetTokenAsText(JsonObject: JsonObject; TokenKey: Text;
