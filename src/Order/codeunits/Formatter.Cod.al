@@ -139,7 +139,7 @@ codeunit 50101 Formatter
 
     procedure CreateJsonOrder(OrderNo: Code[20])
     var
-        JsonObjectContainer: JsonObject;
+        JsonContainer: JsonObject;
         JsonObjectHeader: JsonObject;
         JsonObjectLines: JsonObject;
         JsonOrderArray: JsonArray;
@@ -157,10 +157,10 @@ codeunit 50101 Formatter
         SalesHeader.Get(SalesHeader."Document Type"::Order, OrderNo);
         //Creates the JSON header details
         JsonObjectHeader.Add('sales_order_no', SalesHeader."No.");
-        JsonObjectHeader.Add(' bill_to_customer_no', SalesHeader."Bill-to Customer No.");
+        JsonObjectHeader.Add('bill_to_customer_no', SalesHeader."Bill-to Customer No.");
         JsonObjectHeader.Add('bill_to_name', SalesHeader."Bill-to Name");
         JsonObjectHeader.Add('order_date', SalesHeader."Order Date");
-        JsonOrderArray.Add(JsonObjectHeader);
+
         //Retrieves the Sales Lines
         SalesLines.SetRange("Document Type", SalesLines."Document Type"::Order);
         SalesLines.SetRange("Document No.", SalesHeader."No.");
@@ -179,8 +179,11 @@ codeunit 50101 Formatter
             JsonObjectLines.Replace('quantity', SalesLines.Quantity);
             JsonArrayLines.Add(JsonObjectLines);
         until SalesLines.Next() = 0;
-        JsonOrderArray.Add(JsonArrayLines);
-        JsonObjectContainer.Add('sales', JsonOrderArray);
+
+        JsonObjectHeader.Add('sales', JsonArrayLines);
+        JsonOrderArray.Add(JsonObjectHeader);
+
+        JsonContainer.Add('customers', JsonOrderArray);
 
         fileName := 'sales.json';
 
@@ -188,7 +191,7 @@ codeunit 50101 Formatter
         TempBlob.CreateOutStream(outStr, TextEncoding::UTF8);
 
         // Write the contents of the doc to the stream
-        JsonObjectContainer.WriteTo(outStr);
+        JsonContainer.WriteTo(outStr);
 
         // From the same Blob, that now contains the XML document, create an inStr
         TempBlob.CreateInStream(inStr, TextEncoding::UTF8);
