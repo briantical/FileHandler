@@ -16,8 +16,7 @@ codeunit 50100 TranslationManagement
     begin
         Content.WriteFrom('{"domain":"' + Name + '"}');
         Client.DefaultRequestHeaders().Add('Authorization', 'Bearer yeLHBn8kpkUZ5IE5YyZBRJcqHE3lMKpo');
-        Client.Post('https://api.fullcontact.com/v3/company.enrich',
-              Content, ResponseMessage);
+        Client.Post('https://api.fullcontact.com/v3/company.enrich', Content, ResponseMessage);
         if not ResponseMessage.IsSuccessStatusCode() then
             Error(ResponseMessage.ReasonPhrase);
         ResponseMessage.Content().ReadAs(Result);
@@ -38,8 +37,7 @@ codeunit 50100 TranslationManagement
         Customer.Modify(true);
     end;
 
-    procedure GetTokenAsText(JsonObject: JsonObject; TokenKey: Text;
-   Error: Text): Text;
+    procedure GetTokenAsText(JsonObject: JsonObject; TokenKey: Text; Error: Text): Text;
     var
         JsonToken: JsonToken;
     begin
@@ -51,8 +49,7 @@ codeunit 50100 TranslationManagement
         exit(JsonToken.AsValue.AsText);
     end;
 
-    procedure GetTokenAsObject(JsonObject: JsonObject; TokenKey: Text;
-   Error: Text): JsonObject;
+    procedure GetTokenAsObject(JsonObject: JsonObject; TokenKey: Text; Error: Text): JsonObject;
     var
         JsonToken: JsonToken;
     begin
@@ -62,8 +59,7 @@ codeunit 50100 TranslationManagement
         exit(JsonToken.AsObject());
     end;
 
-    procedure GetTokenAsArray(JsonObject: JsonObject; TokenKey: Text;
-   Error: Text): JsonArray;
+    procedure GetTokenAsArray(JsonObject: JsonObject; TokenKey: Text; Error: Text): JsonArray;
     var
         JsonToken: JsonToken;
     begin
@@ -73,8 +69,7 @@ codeunit 50100 TranslationManagement
         exit(JsonToken.AsArray());
     end;
 
-    procedure GetArrayElementAsObject(JsonArray: JsonArray; Index:
-   Integer; Error: Text): JsonObject;
+    procedure GetArrayElementAsObject(JsonArray: JsonArray; Index: Integer; Error: Text): JsonObject;
     var
         JsonToken: JsonToken;
     begin
