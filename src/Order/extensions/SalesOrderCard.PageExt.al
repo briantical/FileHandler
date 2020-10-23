@@ -9,7 +9,7 @@ pageextension 50102 SalesOrderExt extends "Sales Order"
                 Caption = 'Create XML File';
                 ToolTip = 'Create an XML file of the sales order';
                 ApplicationArea = All;
-                Image = Add;
+                Image = Export;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;
@@ -25,7 +25,7 @@ pageextension 50102 SalesOrderExt extends "Sales Order"
                 Caption = 'Create JSON File';
                 ToolTip = 'Create an JSON file of the sales order';
                 ApplicationArea = All;
-                Image = Add;
+                Image = Export;
                 Promoted = true;
                 PromotedCategory = Process;
                 PromotedIsBig = true;

@@ -67,7 +67,7 @@ codeunit 50101 Formatter
         SalesLine.SetRange(Type, SalesLine.Type::Item);
 
         xmlDoc := xmlDocument.Create();
-        xmlDec := xmlDeclaration.Create('1.0', 'UTF-8', '');
+        xmlDec := xmlDeclaration.Create('1.0', 'UTF-8', 'yes');
         xmlDoc.SetDeclaration(xmlDec);
 
         root := xmlElement.Create('root');
