@@ -4,7 +4,7 @@ pageextension 50102 SalesOrderExt extends "Sales Order"
     {
         addlast(Processing)
         {
-            action(AddFreeGifts)
+            action(CreateXML)
             {
                 Caption = 'Create XML File';
                 ToolTip = 'Create an XML file of the sales order';
@@ -16,6 +16,21 @@ pageextension 50102 SalesOrderExt extends "Sales Order"
                 trigger OnAction()
                 begin
                     Formatter.XMLDocumentCreation(Rec);
+                end;
+            }
+
+            action(CreateJSON)
+            {
+                Caption = 'Create JSON File';
+                ToolTip = 'Create an JSON file of the sales order';
+                ApplicationArea = All;
+                Image = Add;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                trigger OnAction()
+                begin
+                    Formatter.CreateJsonOrder(Rec."No.");
                 end;
             }
         }

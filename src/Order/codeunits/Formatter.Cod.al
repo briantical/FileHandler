@@ -139,19 +139,25 @@ codeunit 50101 Formatter
 
     procedure CreateJsonOrder(OrderNo: Code[20])
     var
+        JsonObjectContainer: JsonObject;
         JsonObjectHeader: JsonObject;
         JsonObjectLines: JsonObject;
         JsonOrderArray: JsonArray;
         JsonArrayLines: JsonArray;
         SalesHeader: Record "Sales Header";
         SalesLines: Record "Sales Line";
+
+        TempBlob: Codeunit "Temp Blob";
+        outStr: OutStream;
+        inStr: InStream;
+        TempFile: File;
+        fileName: Text;
     begin
         //Retrieves the Sales Header
         SalesHeader.Get(SalesHeader."Document Type"::Order, OrderNo);
         //Creates the JSON header details
         JsonObjectHeader.Add('sales_order_no', SalesHeader."No.");
-        JsonObjectHeader.Add(' bill_to_customer_no',
-       SalesHeader."Bill-to Customer No.");
+        JsonObjectHeader.Add(' bill_to_customer_no', SalesHeader."Bill-to Customer No.");
         JsonObjectHeader.Add('bill_to_name', SalesHeader."Bill-to Name");
         JsonObjectHeader.Add('order_date', SalesHeader."Order Date");
         JsonOrderArray.Add(JsonObjectHeader);
@@ -160,7 +166,7 @@ codeunit 50101 Formatter
         SalesLines.SetRange("Document No.", SalesHeader."No.");
         if SalesLines.FindSet then
             // JsonObject Init
-            JsonObjectLines.Add('line_no', '');
+        JsonObjectLines.Add('line_no', '');
         JsonObjectLines.Add('item_no', '');
         JsonObjectLines.Add('description', '');
         JsonObjectLines.Add('location_code', '');
@@ -168,13 +174,26 @@ codeunit 50101 Formatter
         repeat
             JsonObjectLines.Replace('line_no', SalesLines."Line No.");
             JsonObjectLines.Replace('item_no', SalesLines."No.");
-            JsonObjectLines.Replace('description',
-           SalesLines.Description);
-            JsonObjectLines.Replace('location_code',
-           SalesLines."Location Code");
+            JsonObjectLines.Replace('description', SalesLines.Description);
+            JsonObjectLines.Replace('location_code', SalesLines."Location Code");
             JsonObjectLines.Replace('quantity', SalesLines.Quantity);
             JsonArrayLines.Add(JsonObjectLines);
         until SalesLines.Next() = 0;
         JsonOrderArray.Add(JsonArrayLines);
+        JsonObjectContainer.Add('sales', JsonOrderArray);
+
+        fileName := 'sales.json';
+
+        // Create an outStream from the Blob, notice the encoding.
+        TempBlob.CreateOutStream(outStr, TextEncoding::UTF8);
+
+        // Write the contents of the doc to the stream
+        JsonObjectHeader.WriteTo(outStr);
+
+        // From the same Blob, that now contains the XML document, create an inStr
+        TempBlob.CreateInStream(inStr, TextEncoding::UTF8);
+
+        // Save the data of the InStream as a file.
+        DownloadFromStream(inStr, 'Export', '', '', fileName);
     end;
 }
