@@ -188,7 +188,7 @@ codeunit 50101 Formatter
         TempBlob.CreateOutStream(outStr, TextEncoding::UTF8);
 
         // Write the contents of the doc to the stream
-        JsonObjectHeader.WriteTo(outStr);
+        JsonObjectContainer.WriteTo(outStr);
 
         // From the same Blob, that now contains the XML document, create an inStr
         TempBlob.CreateInStream(inStr, TextEncoding::UTF8);
