@@ -16,6 +16,7 @@ pageextension 50102 SalesOrderExt extends "Sales Order"
                 trigger OnAction()
                 begin
                     Formatter.XMLDocumentCreation(Rec);
+                    // Formatter.ImportXMLs();
                 end;
             }
 

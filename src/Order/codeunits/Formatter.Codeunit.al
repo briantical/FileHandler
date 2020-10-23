@@ -1,28 +1,38 @@
 codeunit 50101 Formatter
 {
-    procedure ImportXMLs()
-    var
-        TempBlob: Codeunit "Temp Blob";
-        TargetXmlDoc: XmlDocument;
-        XmlDec: XmlDeclaration;
-        Instr: InStream;
-        OutStr: OutStream;
-        filename: Text;
-    begin
-        // Create the Xml Document
-        TargetXmlDoc := XmlDocument.Create;
-        xmlDec := xmlDeclaration.Create('1.0', 'UTF-8', '');
-        TargetXmlDoc.SetDeclaration(xmlDec);
-        // Create an Instream object & upload the XML file into it
-        TempBlob.CreateInStream(Instr);
-        // filename := 'data.xml';
-        UploadIntoStream('Import XML', '', '', filename, Instr);
-        // Read stream into new xml document
-        Xmldocument.ReadFrom(Instr, TargetXmlDoc);
-        DownloadFromStream(InStr, '', '', '', filename);
+    // procedure ImportXMLs(OrderNo: Code[20])
+    // var
+    //     TempBlob: Codeunit "Temp Blob";
+    //     TargetXmlDoc: XmlDocument;
+    //     XmlDec: XmlDeclaration;
+    //     Instr: InStream;
+    //     OutStr: OutStream;
+    //     filename: Text;
+    //     XMLBuffer: Record "XML Buffer";
+    //     Item: Record Item;
 
+    // begin
+    //     // Create the Xml Document
+    //     TargetXmlDoc := XmlDocument.Create;
+    //     xmlDec := xmlDeclaration.Create('1.0', 'UTF-8', '');
+    //     TargetXmlDoc.SetDeclaration(xmlDec);
+    //     // Create an Instream object & upload the XML file into it
+    //     TempBlob.CreateInStream(Instr);
+    //     XMLBuffer.DeleteAll();
+    //     XMLBuffer.LoadFromStream(Instr);
 
-    end;
+    //     if XMLBuffer.FindSet() then
+    //         repeat
+    //             if XMLBuffer.FieldNo(OrderNo) = 1 then
+    //                 Item.Init();
+    //         until XMLBuffer.Next() = 0;
+
+    //     // filename := 'data.xml';
+    //     UploadIntoStream('Import XML', '', '', filename, Instr);
+    //     // Read stream into new xml document
+    //     Xmldocument.ReadFrom(Instr, TargetXmlDoc);
+    //     DownloadFromStream(InStr, '', '', '', filename);
+    // end;
 
     procedure XMLDocumentCreation(var SalesHeader: Record "Sales Header")
     var
